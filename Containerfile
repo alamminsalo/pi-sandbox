@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     python3-venv \
+    pkg-config \
+    libssl-dev \
     build-essential \
     curl \
     git \
@@ -26,7 +28,7 @@ USER node
 WORKDIR /usr/src/app
 
 # 4. Install Rust via rustup (non-interactive)
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # 5. Install UV (Python Manager)
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -40,5 +42,11 @@ RUN npm install -g @ast-grep/cli madge jscpd knip @mariozechner/pi-coding-agent 
 
 ENV HOME=/home/node
 ENV PYTHONUNBUFFERED=1
+
+# Tests
+RUN rustc --version 
+RUN cargo --version
+RUN uv --version
+RUN pi --version
 
 ENTRYPOINT ["pi"]
